@@ -1,6 +1,6 @@
-# 🗺️ EcoMap PP — Análisis Comercial Parque Patricios
+# 🗺️ EcoMap PP — Análisis Territorial Comercial · Regulatorio · Parque Patricios
 
-> Mapa web interactivo de comercios y ecommerce en **Parque Patricios, CABA, Argentina**.  
+> Mapa web interactivo de análisis territorial comercial y riesgo regulatorio en **Parque Patricios, CABA, Argentina**.  
 > Desarrollado con **Leaflet.js** y datos abiertos de **OpenStreetMap** vía **Overpass API**.
 
 [![Demo en vivo](https://img.shields.io/badge/🌐_Demo-GitHub_Pages-1a6bff?style=flat-square)](https://denplus007.github.io/ecoomercemap-parque-patricios)
@@ -12,7 +12,13 @@
 
 ## 📸 Preview
 
-![EcoMap PP - Vista del mapa](assets/screenshot.png)
+![EcoMap PP — Análisis Territorial Comercial Regulatorio Parque Patricios](img/screenshot.png)
+
+---
+
+## 🎥 Demo
+
+https://github.com/DenPlus007/ecoomercemap-parque-patricios/blob/main/demo.mp4
 
 ---
 
@@ -170,36 +176,6 @@ Desarrollado por **Denise Hernández** — Geógrafa & Analista GIS
 ---
 
 *Datos © OpenStreetMap contributors — ODbL License*
-
-
----
-
-## 🔑 Google Places API — versión corregida
-
-Esta versión agrega un backend Node/Express para que la API Key no quede dentro del HTML.
-
-### Ejecutar localmente
-
-```bash
-npm install
-copy .env.example .env
-npm start
-```
-
-Luego abrir:
-
-```txt
-http://localhost:3000
-```
-
-En el archivo `.env`, reemplazar:
-
-```env
-GOOGLE_PLACES_API_KEY=PEGAR_ACA_TU_API_KEY
-```
-
-por tu clave real de Google Places.
-
 ### Importante
 
 - La capa OSM funciona sin API Key.
