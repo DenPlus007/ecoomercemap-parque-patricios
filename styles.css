@@ -654,3 +654,148 @@ body {
   margin-left: 8px !important;
   margin-top: 8px !important;
 }
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE MOBILE — max-width: 768px
+══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* TOPBAR compacto */
+  #topbar {
+    height: auto;
+    min-height: 48px;
+    padding: 6px 10px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .logo         { font-size: 11px; letter-spacing: 2px; }
+  .logo-sub     { display: none; }
+  #statusBadge  { font-size: 9px; padding: 2px 8px; }
+  #btnLoad      { font-size: 9px; padding: 6px 12px; letter-spacing: 0; }
+
+  /* SELECT de nav app más angosto */
+  #navAppSelect { font-size: 9px !important; padding: 4px 6px !important; max-width: 120px; }
+
+  /* SIDEBAR oculto por defecto en mobile — se abre con el botón */
+  #sidebar {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    z-index: 1200;
+    width: var(--sb-w) !important;
+    transform: translateX(-100%);
+    transition: transform .28s ease;
+    box-shadow: 4px 0 24px rgba(0,0,0,.7);
+  }
+  #sidebar.mobile-open {
+    transform: translateX(0);
+  }
+  #sidebar.collapsed {
+    transform: translateX(-100%);
+    width: var(--sb-w) !important;
+  }
+
+  /* Botón hamburguesa flotante para abrir sidebar */
+  #mobileMenuBtn {
+    display: flex !important;
+  }
+
+  /* Overlay oscuro cuando sidebar está abierto */
+  #sidebarOverlay {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    z-index: 1100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s;
+  }
+  #sidebarOverlay.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* MAP ocupa todo el ancho */
+  #mapContainer { width: 100%; }
+
+  /* COORDS BAR más pequeño */
+  #coordsBar {
+    height: 22px;
+    font-size: 9px;
+    padding: 0 8px;
+    gap: 8px;
+  }
+
+  /* Controles Leaflet más grandes para touch */
+  .leaflet-bar a {
+    width: 34px !important;
+    height: 34px !important;
+    line-height: 34px !important;
+    font-size: 18px !important;
+  }
+
+  /* Paneles flotantes bottomright/bottomleft — ancho máximo mobile */
+  .top5-riesgo,
+  .sanciones-panel,
+  .heatmap-legend {
+    max-width: calc(100vw - 24px) !important;
+    width: calc(100vw - 24px) !important;
+    font-size: 11px;
+  }
+  .leaflet-bottom.leaflet-right,
+  .leaflet-bottom.leaflet-left {
+    max-width: 100vw;
+  }
+
+  /* Popup más angosto */
+  .pop-wrap { min-width: 180px; max-width: calc(100vw - 40px); }
+  .pop-name { font-size: 13px; }
+  .pop-nav  { flex-wrap: wrap; gap: 4px; padding: 6px 10px; }
+  .nav-btn  { font-size: 9px; padding: 4px 8px; }
+
+  /* Norm box en popup */
+  .norm-box { padding: 7px; }
+  .norm-list li { font-size: 10px; }
+  .norm-rec { font-size: 10px; }
+}
+
+/* ══════════════════════════════════════════════
+   BOTÓN HAMBURGUESA (siempre en DOM, oculto en desktop)
+══════════════════════════════════════════════ */
+#mobileMenuBtn {
+  display: none;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1300;
+  width: 38px;
+  height: 38px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,.5);
+}
+#mobileMenuBtn span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+  position: relative;
+}
+#mobileMenuBtn span::before,
+#mobileMenuBtn span::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 18px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+#mobileMenuBtn span::before { top: -5px; }
+#mobileMenuBtn span::after  { top:  5px; }

@@ -1132,7 +1132,47 @@ function generarTop5HTML() {
   `;
 }
 
+
+// ── MOBILE MENU ──────────────────────────────────────
+function isMobile() {
+  return window.innerWidth <= 768;
+}
+
+function toggleMobileMenu() {
+  const sb  = document.getElementById('sidebar');
+  const ov  = document.getElementById('sidebarOverlay');
+  const isOpen = sb.classList.contains('mobile-open');
+  if (isOpen) {
+    closeMobileMenu();
+  } else {
+    sb.classList.add('mobile-open');
+    ov.classList.add('show');
+  }
+}
+
+function closeMobileMenu() {
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+}
+
+// En mobile, los paneles flotantes van todos abajo a la izquierda para no solaparse
+function adjustPanelsMobile() {
+  if (!isMobile()) return;
+  if (top5Control)       top5Control.setPosition('bottomleft');
+  if (sancionesControl)  sancionesControl.setPosition('bottomleft');
+  if (heatmapLegend)     heatmapLegend.setPosition('bottomleft');
+}
+
+window.addEventListener('resize', () => {
+  map.invalidateSize();
+  adjustPanelsMobile();
+});
+
 function toggleSidebar(){
+  if (isMobile()) {
+    closeMobileMenu();
+    return;
+  }
   sidebarOpen=!sidebarOpen;
   document.getElementById('sidebar').classList.toggle('collapsed',!sidebarOpen);
   document.getElementById('sbIcon').textContent=sidebarOpen?'◀':'▶';
