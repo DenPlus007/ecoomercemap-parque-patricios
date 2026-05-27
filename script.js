@@ -252,7 +252,7 @@ const tiles = {
 map = L.map('map', { layers:[tiles.stadia], zoomControl:false });
 map.setView([-34.63756234066582, -58.40596551597899], 13);
 currentTile = tiles.stadia;
-L.control.zoom({ position:'topright' }).addTo(map);
+L.control.zoom({ position:'topleft' }).addTo(map);
 markerLayer = L.layerGroup().addTo(map);
 
 // Load barrio boundary on startup
