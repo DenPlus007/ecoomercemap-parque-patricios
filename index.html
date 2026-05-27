@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoMap PP · Análisis Territorial Comercial Regulatorio · Parque Patricios</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="logo">⬡ ECOMAP <em>PP</em></div>
+  <div class="logo-sub">Análisis Territorial Comercial · Regulatorio · Parque Patricios · CABA · Argentina</div>
+  <div class="tb-sep"></div>
+  <div id="statusBadge">LISTO</div>
+  <select id="navAppSelect" onchange="setNavApp(this.value)" style="background:var(--bg3);color:var(--white);border:1px solid var(--border);padding:6px 12px;border-radius:6px;font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;outline:none;">
+    <option value="">📍 Seleccionar fuente</option>
+    <option value="osm">🗺️ OSM</option>
+    <option value="waze">🟡 Waze</option>
+    <option value="gmaps">🟢 Google Maps</option>
+  </select>
+  <button id="btnLoad" onclick="loadData()" style="background:var(--accent);color:#fff;border:none;padding:8px 18px;border-radius:7px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1px;cursor:pointer;white-space:nowrap;transition:all .2s;box-shadow:0 0 20px rgba(61,139,255,.35);">▶ CONSULTAR</button>
+</div>
+
+<div id="main">
+
+  <div id="sidebar">
+    <div id="sbHeader" onclick="toggleSidebar()">
+      <span id="sbIcon">◀</span>
+      <span id="sbTitle">CAPAS Y DATOS</span>
+    </div>
+    <div class="sb-content">
+
+      <div class="sb-section">
+        <h3>📊 Estadísticas</h3>
+        <div class="stat-row"><span class="stat-label">Total puntos</span><span class="stat-value" id="stTotal">—</span></div>
+        <div class="stat-row"><span class="stat-label">Con nombre</span><span class="stat-value" id="stNamed">—</span></div>
+        <div class="stat-row"><span class="stat-label">Con website</span><span class="stat-value" id="stWeb">—</span></div>
+        <div class="stat-row"><span class="stat-label">Con horarios</span><span class="stat-value" id="stHours">—</span></div>
+        <div class="stat-row"><span class="stat-label">Categorías</span><span class="stat-value" id="stCats">—</span></div>
+      </div>
+
+      <div class="sb-section">
+        <h3>🗺️ Mapa base</h3>
+        <label class="layer-item"><input type="radio" name="bmap" value="stadia" checked onchange="changeBasemap(this.value)"> ESRI Dark Gray Canvas</label>
+        <label class="layer-item"><input type="radio" name="bmap" value="dark" onchange="changeBasemap(this.value)"> Dark Matter</label>
+        <label class="layer-item"><input type="radio" name="bmap" value="osm" onchange="changeBasemap(this.value)"> OpenStreetMap</label>
+        <label class="layer-item"><input type="radio" name="bmap" value="satellite" onchange="changeBasemap(this.value)"> Esri Satelital</label>
+      </div>
+
+      <div class="sb-section">
+        <h3>🔲 Capas</h3>
+        <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border);">
+          <div style="font-size:11px;color:var(--muted2);margin-bottom:6px;">App Navegación</div>
+          <label class="layer-item"><input type="radio" name="navapp" value="osm" checked onchange="setNavApp(this.value)"> <span style="color:#3d8bff">📌</span> OSM</label>
+          <label class="layer-item"><input type="radio" name="navapp" value="waze" onchange="setNavApp(this.value)"> <span style="color:#ffd93d">📌</span> Waze</label>
+          <label class="layer-item"><input type="radio" name="navapp" value="gmaps" onchange="setNavApp(this.value)"> <span style="color:#00e096">📌</span> Google Maps</label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-label"><span>🟣</span> Límite Barrio PP</div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleBarrio" checked onchange="toggleBarrioLayer(this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-label"><span id="comerciosIcon">📌</span> Comercios <span id="comerciosSource">OSM</span></div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleComercio" checked onchange="toggleComercioLayer(this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-label"><span style="color:#4285F4">📌</span> Google Places</div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleGooglePlaces" onchange="toggleGooglePlacesLayer(this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div class="toggle-label"><span style="color:#ff4060">🔥</span> Heat Map Regulatorio</div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleHeatmap" onchange="toggleHeatmapLayer(this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-label"><span style="color:#f59e0b">📊</span> Top 5 Riesgo Regulatorio</div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleTop5" onchange="toggleTop5Layer(this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-label"><span style="color:#60a5fa">⚖️</span> Sanciones Regulatorias</div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleSanciones" onchange="toggleSancionesLayer(this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="sb-section">
+        <h3>🏷️ Leyenda</h3>
+        <div id="legendBox"><div style="font-size:11px;color:var(--muted)">Sin datos cargados</div></div>
+      </div>
+
+      <div class="sb-section">
+        <h3>🔍 Filtrar</h3>
+        <input type="text" id="filterInput" placeholder="Nombre, rubro, dirección…" oninput="filterMarkers(this.value)">
+        <div id="filterCount"></div>
+      </div>
+
+      <div class="sb-section">
+        <h3>💾 Exportar</h3>
+        <button class="export-btn geo" onclick="downloadGeoJSON()">↓ ecommerce_parque_patricios.geojson</button>
+        <button class="export-btn csv" onclick="downloadCSV()">↓ ecommerce_parque_patricios.csv</button>
+      </div>
+
+      <div class="sb-section">
+        <h3>🔗 Créditos</h3>
+        <div style="font-size:11px;color:var(--muted2);line-height:1.9">
+          Datos: <a href="https://www.openstreetmap.org" target="_blank" style="color:var(--accent)">OpenStreetMap</a><br>
+          API: <a href="https://overpass-api.de" target="_blank" style="color:var(--accent)">Overpass API</a><br>
+          Mapa: <a href="https://leafletjs.com" target="_blank" style="color:var(--accent)">Leaflet.js</a><br>
+          Código: <a href="https://github.com/DenPlus007/ecoomercemap-parque-patricios" target="_blank" style="color:var(--orange)">GitHub ↗</a><br>
+          CRS: WGS84 · EPSG:4326
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="mapContainer">
+    <div id="loadingOverlay">
+      <div class="load-box">
+        <div class="load-spinner"></div>
+        <div class="load-title">CONSULTANDO OVERPASS</div>
+        <div class="load-sub">Buscando comercios en Parque Patricios…</div>
+      </div>
+    </div>
+    <div id="map"></div>
+    <div id="coordsBar">
+      <span>📍</span>
+      <span id="coordsDisplay">Mover cursor sobre el mapa</span>
+      <span class="cb-sep"></span>
+      <span>WGS84 · EPSG:4326</span>
+      <span>·</span>
+      <span>Zoom: <span id="zoomDisplay" style="color:var(--accent)">13</span></span>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
