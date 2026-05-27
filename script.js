@@ -225,8 +225,13 @@ let map, geojsonData=null, allMarkers=[], markerLayer, currentTile;
 let barrioLayer = null;
 let sidebarOpen = true;
 let selectedNavApp = 'osm';
+/* GOOGLE PLACES — activar cuando el backend tenga API Key configurada
 let googlePlacesData = [];
 let googlePlacesLayer = L.layerGroup();
+let showGooglePlaces = false;
+*/
+let googlePlacesData = [];
+let googlePlacesLayer = null;
 let showGooglePlaces = false;
 let heatmapLayer = null;
 let heatmapLegend = null;
@@ -555,15 +560,16 @@ function updateStats(){
   const hrs  =fs.filter(f=>f.properties.horarios).length;
   const cats =new Set(fs.map(f=>f.properties.categoria)).size;
   
+  /* GOOGLE PLACES stats — descomentar con el backend activo
   let totalPoints = n;
   let sourceInfo = `OSM: ${n}`;
-  
   if (showGooglePlaces && googlePlacesData.length > 0) {
     totalPoints = n + googlePlacesData.length;
     sourceInfo = `OSM: ${n} + Google: ${googlePlacesData.length}`;
   }
-  
   document.getElementById('stTotal').textContent = totalPoints + (sourceInfo !== `OSM: ${n}` ? ` (${sourceInfo})` : '');
+  */
+  document.getElementById('stTotal').textContent = n;
   document.getElementById('stNamed').textContent = `${named} (${pct(named,n)}%)`;
   document.getElementById('stWeb').textContent   = `${web} (${pct(web,n)}%)`;
   document.getElementById('stHours').textContent = `${hrs} (${pct(hrs,n)}%)`;
@@ -584,6 +590,7 @@ function updateLegend(){
       <span class="leg-count">${n}</span>
     </div>`).join('');
   
+  /* GOOGLE PLACES leyenda — descomentar con el backend activo
   if (showGooglePlaces && googlePlacesData.length > 0) {
     legendHtml += `
       <div class="leg-item">
@@ -592,6 +599,7 @@ function updateLegend(){
         <span class="leg-count">${googlePlacesData.length}</span>
       </div>`;
   }
+  */
   
   document.getElementById('legendBox').innerHTML = legendHtml;
 }
@@ -825,9 +833,9 @@ function toggleComercioLayer(on) {
   else    map.removeLayer(markerLayer);
 }
 
+/* GOOGLE PLACES functions — descomentar cuando el backend esté configurado
 function toggleGooglePlacesLayer(on) {
   showGooglePlaces = on;
-
   if (on) {
     if (googlePlacesData.length === 0) {
       loadGooglePlaces();
@@ -843,7 +851,10 @@ function toggleGooglePlacesLayer(on) {
   }
 }
 
-async function loadGooglePlaces() {
+
+async function loadGooglePlaces() { /* ACTIVAR CON BACKEND */
+  alert("Google Places requiere configurar GOOGLE_PLACES_API_KEY en .env y correr node server.js"); }
+/* CÓDIGO ORIGINAL loadGooglePlaces — {
   setStatus('loading', 'CONSULTANDO GOOGLE PLACES…');
 
   try {
@@ -911,6 +922,7 @@ async function loadGooglePlaces() {
   }
 }
 
+*/
 
 // ── MAPA DE CALOR DE RIESGO REGULATORIO ─────────────────────────────
 function generarHeatmapRiesgo() {
