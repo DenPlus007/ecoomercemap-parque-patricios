@@ -850,78 +850,58 @@ function toggleGooglePlacesLayer(on) {
     updateStats();
   }
 }
+*/
 
+/* GOOGLE PLACES — loadGooglePlaces
+   Descomentar cuando el backend esté configurado con GOOGLE_PLACES_API_KEY en .env
+   y correr: node server.js
 
-async function loadGooglePlaces() { /* ACTIVAR CON BACKEND */
-  alert("Google Places requiere configurar GOOGLE_PLACES_API_KEY en .env y correr node server.js"); }
-/* CÓDIGO ORIGINAL loadGooglePlaces — {
+async function loadGooglePlaces() {
   setStatus('loading', 'CONSULTANDO GOOGLE PLACES…');
-
   try {
     const lat = -34.63756234066582;
     const lon = -58.40596551597899;
     const radius = 2000;
-
     const response = await fetch(`/api/google-places?lat=${lat}&lon=${lon}&radius=${radius}`);
-
     if (!response.ok) {
       const errText = await response.text();
       throw new Error(errText || 'Error consultando backend Google Places');
     }
-
     const data = await response.json();
-
     if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') {
       throw new Error(data.error_message || 'Error Google Places: ' + data.status);
     }
-
     googlePlacesData = data.results || [];
     googlePlacesLayer.clearLayers();
-
     googlePlacesData.forEach(place => {
       const lat = place.geometry.location.lat;
       const lon = place.geometry.location.lng;
-
-      const customIcon = L.icon({
-        iconUrl: 'img/comercios.png',
-        iconSize: [36, 36],
-        iconAnchor: [18, 36],
-        popupAnchor: [0, -38]
-      });
-
-      const marker = L.marker([lat, lon], { icon: customIcon });
-
+      const customIcon = L.icon({ iconUrl:'img/comercios.png', iconSize:[36,36], iconAnchor:[18,36], popupAnchor:[0,-38] });
+      const marker = L.marker([lat,lon],{ icon:customIcon });
       marker.bindPopup(`
         <div class="pop-wrap">
           <div class="pop-head" style="border-left:3px solid #4285F4">
-            <div class="pop-name">${escaparHTML(place.name || 'Google Place')}</div>
+            <div class="pop-name">${escaparHTML(place.name||'Google Place')}</div>
             <div class="pop-cat" style="color:#4285F4;">📍 Google Places</div>
           </div>
           <div class="pop-body">
-            <div class="pop-row"><span class="pop-ico">📍</span><span class="pop-val">${escaparHTML(place.vicinity || 'N/A')}</span></div>
-            ${place.rating ? `<div class="pop-row"><span class="pop-ico">⭐</span><span class="pop-val">${place.rating} (${place.user_ratings_total || 0} reviews)</span></div>` : ''}
-            ${place.opening_hours ? `<div class="pop-row"><span class="pop-ico">🕐</span><span class="pop-val">${place.opening_hours.open_now ? '✅ ABIERTO' : '❌ CERRADO'}</span></div>` : ''}
+            <div class="pop-row"><span class="pop-ico">📍</span><span class="pop-val">${escaparHTML(place.vicinity||'N/A')}</span></div>
+            ${place.rating?`<div class="pop-row"><span class="pop-ico">⭐</span><span class="pop-val">${place.rating} (${place.user_ratings_total||0} reviews)</span></div>`:''}
+            ${place.opening_hours?`<div class="pop-row"><span class="pop-ico">🕐</span><span class="pop-val">${place.opening_hours.open_now?'✅ ABIERTO':'❌ CERRADO'}</span></div>`:''}
           </div>
           <div class="pop-coords">WGS84 · Lat ${lat.toFixed(6)} · Lng ${lon.toFixed(6)}</div>
-        </div>
-      `, { maxWidth: 300, className: '' });
-
+        </div>`, { maxWidth:300, className:'' });
       googlePlacesLayer.addLayer(marker);
     });
-
     map.addLayer(googlePlacesLayer);
     setStatus('ok', `✓ ${googlePlacesData.length} desde Google Places`);
-    updateLegend();
-    updateStats();
-
+    updateLegend(); updateStats();
   } catch(err) {
-    setStatus('error', 'ERROR Google Places');
-    alert('Error cargando Google Places:\n' + err.message);
-    document.getElementById('toggleGooglePlaces').checked = false;
+    setStatus('error','ERROR Google Places');
+    alert('Error cargando Google Places:\n'+err.message);
     showGooglePlaces = false;
   }
 }
-
 */
 
 // ── MAPA DE CALOR DE RIESGO REGULATORIO ─────────────────────────────
